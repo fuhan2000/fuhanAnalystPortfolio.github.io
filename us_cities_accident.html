@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>US Cities Accident</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class=""></a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Portfolio Main Page</a></li>
+
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/fuhhanchang/" class="icon brands alt fa-linkedin"><span class="label">linkedin</span></a></li>
+							<li><a href="https://github.com/fuhan2000" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									
+									<h1>US Cities Accidents<br />
+									</h1>
+									<p>A look at selected cities' accidents from 2016 - 2020 with Python and Excel</p>
+								</header>
+								<div class="image main"><img src="images/us_accident_sm.jpg" alt="" /></div>
+								<h2>Filtering of data by year</h2>
+
+								<blockquote>import pandas as pd<br/>
+									df.Start_Time = pd.to_datetime(df.Start_Time)<br/>
+									df_2016 = df[df.Start_Time.dt.year == 2016]<br/>
+									df_2017 = df[df.Start_Time.dt.year == 2017]<br/>
+									df_2018 = df[df.Start_Time.dt.year == 2018]<br/>
+									df_2019 = df[df.Start_Time.dt.year == 2019]<br/>
+									df_2020 = df[df.Start_Time.dt.year == 2020]<br/>
+								</blockquote>
+
+								<h2>Save the data frame to csv</h2>
+								<blockquote>df_2016.to_csv(index=False, path_or_buf = 'E:/project/US_Accident_Detailed/2016_US_Accidents.csv' )</blockquote>
+								<p>Do the same for 2017 - 2020.<br/>
+								Lets take note of the top ten cities for all those years.</p>
+
+								<h2>Top 10 Cities by Accident 2016</h2>
+								<blockquote>df_2016.City.value_counts()[:10].plot(kind = 'barh', title ='Top 10 Cities by Accident 2016')</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/Us_cities_accident/In40.png" alt=""></div></figure>
+
+								<h2>Top 10 Cities by Accident 2017</h2>
+								<blockquote>df_2017.City.value_counts()[:10].plot(kind = 'barh', title ='Top 10 Cities by Accident 2017')</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/Us_cities_accident/In36.png" alt=""></div></figure>
+
+								<h2>Top 10 Cities by Accident 2018</h2>
+								<blockquote>df_2018.City.value_counts()[:10].plot(kind = 'barh', title ='Top 10 Cities by Accident 2018')</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/Us_cities_accident/In4.png" alt=""></div></figure>
+
+								<h2>Top 10 Cities by Accident 2019</h2>
+								<blockquote>df_2019.City.value_counts()[:10].plot(kind = 'barh', title ='Top 10 Cities by Accident 2019')</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/Us_cities_accident/In 4_1.png" alt=""></div></figure>
+								
+								<h2>Top 10 Cities by Accident 2020</h2>
+								<blockquote>df_2020.City.value_counts()[:10].plot(kind = 'barh', title ='Top 10 Cities by Accident 2020')</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/Us_cities_accident/In4_2.png" alt=""></div></figure>
+							
+								<h2>Preparing the Excel sheet for cities 2016 - 2020</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/Us_cities_accident/city.png" alt=""></div></figure>
+								
+								<h2>Accident in Cities</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/Us_cities_accident/selected_city.png" alt=""></div></figure>
+
+								<p>Los Angeles, Miami increase rapidly from Yr19 to Yr20. Miami has the most accidents in Yr20 (29576), followed by Los Angeles(24183) and Charlotte(15454).</p>
+
+								<p>Seattle manage to keep the accident counts low over a sustained period of more than two years. There is a slight drop from Yr17 to Yr20. 
+									Seattle has the lowest accident of 3081 in Yr20 out of this list of sixteen cities. Oklahoma City has the second lowest at 5525.</p>
+
+								<p>There are cities that show a gradual increase in accidents like Atlanta and Austin. This could be because of increase in number of vehicles</p>
+
+								<p>The graph do not include data in Jan16. So this may affect cities with low 2016 accidents like Baton Rouge, Nashville, Oklahoma City, Portland and
+								Raleigh.</p>
+
+								<h2>Conclusion</h2>
+								<ol start="1" role="list"><li>Some cities exhibited rapid increase in accidents. Some don’t. This can be clearly
+									seen in the analysis on sixteen cities.</li>
+								<li>In examining the distribution of severity of accident in cities over time, I discovered
+									there is not much difference yoy . So this was not discussed.</li>
+									<li>Include visuals in your analysis. It makes your report more accessible.</li>
+								</ol>
+
+								<h2>Next Step</h2>
+								<ol start="1" role="list"><li>I may do an interactive dashboard.</li>
+
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<nav id="nav">
+							<ul class="links">
+								<li><a href="index.html">Portfolio Main Page</a></li>
+	
+							</ul>
+						</nav>
+
+						<section class="split contact">
+
+
+
+
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; fuhan</li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

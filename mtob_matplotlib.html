@@ -43,13 +43,13 @@
 									
 									<h1>Using Matplotlib <br />
 										</h1>
-									<p>Recreating Monthly Trend of Balance in Matplotlib. The original graph was done in Web Intelligence.</p>
+									<p>Here we will do two plots on the same axes with different left and right scales.</p>
 								</header>
 
-								<div class="image main"><img src="images/matplotlib_proj/matplotlib_cover.png" alt="" /></div>
-								<p>Here I will recreate the following:<br/> </p>
+								<div class="image main"><img src="images/matplotlib_proj/mtob_transa.png" alt="" /></div>
+								<p>Imagine we are a bank tracking the monthly trend of balance in our customers' account and the number of transactions they make. <br/> </p>
 
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/matplotlib_proj/mtob_webi.png" alt=""></div></figure>
+								
 								<p><br/></p>
 								<h2>Importing Libraries</h2>
 								<p>We need to import matplotlib.pyplot, numpy and pandas.</p>
@@ -66,23 +66,23 @@
 									<p><br/></p>
 									# Auto reloads notebook when changes are made<br/>
 									%reload_ext autoreload<br/>
-									%autoreload 2<br/>
-								</blockquote>
+									%autoreload 2</blockquote>
 
 								<h2>Import data into a data frame</h2>
-								<blockquote>mtob_df = pd.read_csv(r'E:\project\matplotlib_project\monthly_trend_of_balance.csv')<br/>
-									mtob_df</blockquote>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/matplotlib_proj/mtob_df.png" alt=""></div></figure>
+								<blockquote>mtob_transac_df = pd.read_csv(r'E:\project\matplotlib_project\monthly_trend_of_balance_transac.csv')<br/>
+									mtob_transac_df</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/matplotlib_proj/mtob_trans_df.png" alt=""></div></figure>
 								<p><br/></p>
 								<h2>Converting to Numpy array</h2>
 								<blockquote># Convert from Pandas to NumPy array<br/>
-									np_arr = mtob_df.to_numpy()<br/>
+									np_arr = mtob_transac_df.to_numpy()<br/>
 									np_arr</blockquote>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/matplotlib_proj/mtob_array.png" alt=""></div></figure>
+									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/matplotlib_proj/mtob_trans_array.png" alt=""></div></figure>
 								<p><br/></p>
 								<h2>Get ready x and y</h2>
 								<blockquote>x_1 = np_arr[:,0]<br/>
-									y_1 = np_arr[:,1]</blockquote>
+									y_1 = np_arr[:,1]<br/>
+									y_2 = np_arr[:,2]</blockquote>
 								<p><br/></p>
 								<h2>Plot the graph</h2>
 								<blockquote># Define width & height in inches<br/>
@@ -94,52 +94,54 @@
 									#<br/>
 									axes_1 = fig_1.add_axes([0,0,1,1])<br/>
 									<p><br/></p>
-									# Set labels and title<br/>
+									# Set lables and title<br/>
 									axes_1.set_xlabel('Month')<br/>
 									axes_1.set_ylabel('Amount')<br/>
-									axes_1.set_title('Monthly Trend of Balance')<br/>
+									axes_1.set_title('Monthly Trend of Amount and # transactions')<br/>
 									# plot lines in blue<br/>
 									# select marker to match source<br/>
 									#<br/>
 									axes_1.plot(x_1,y_1, color = 'blue', marker='o', markersize = 4)<br/>
 									<p><br/></p>
-									# Add a grid, dashes(5pts 1 pt dashes separated by 2pt space)<br/>
-									#<br/>
-									axes_1.grid(True, axis = 'y', dashes=(5, 2, 1, 2))<br/>
-									<p><br/></p>
-									# Plot horizontal lines at each y from xmin to xmax.<br/>
-									# xmin = -0.5<br/>
-									# xmax = len(x_1)-0.5<br/>
-									axes_1.hlines(0,-0.5,len(x_1)-0.5, color = 'grey', lw=0.5)<br/>
-									<p><br/></p>
 									# major ticks at multiples of 10000000<br/>
-									# Label major ticks with '.0f' formatting><br/>
+									# Label major ticks with '.0f' formatting<br/>
 									#<br/>
 									axes_1.yaxis.set_major_locator(MultipleLocator(10000000))<br/>
 									axes_1.yaxis.set_major_formatter('{x:.0f}')<br/>
 									<p><br/></p>
 									# set the ylimits to match source<br/>
 									#<br/>
-									axes_1.set_ylim([-20000000, 40000000])<br/>
+									axes_1.set_ylim([-30000000, 40000000])<br/>
 									<p><br/></p>
 									# `ha` is just shorthand for horizontalalignment<br/>
 									# xlabel looks better with ha set this way.<br/>
-									plt.xticks(rotation = 25, ha='right')
-								</blockquote>
+									plt.xticks(rotation = 25, ha='right')<br/>
+									<br/>
+									axes_2= axes_1.twinx()<br/>
+									axes_2.set_ylabel('#transactions')<br/>
+									axes_2.plot(x_1, y_2, color ='cyan', marker='x', markersize = 4)<br/>
+									# major ticks at multiple of 5000<br/>
+									axes_2.yaxis.set_major_locator(MultipleLocator(5000))<br/>
+									axes_2.yaxis.set_major_formatter('{x:.0f}')<br/>
+									#adjust the ylimit for readability<br/>
+									axes_2.set_ylim([0, 40000])<br/>
+									<p><br/></p>
+									# annotate plots<br/>
+									# adjust values as necessary for readability<br/>
+									axes_1.text(0, 27000000, 'Amount', color = 'blue')<br/>
+									axes_1.text(0, -12000000, '#transactions', color = 'cyan')</blockquote>
 								<h2>Graph Output</h2>
 								<p><br/></p>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/matplotlib_proj/mtob_plt.png" alt=""></div></figure>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/matplotlib_proj/mtob_transa.png" alt=""></div></figure>
 								<p><br/></p>
-								<h2>Saving the graph</h2>
-								<blockquote># save as png<br/>
-									# <br/>
-									fig_1.savefig(r'E:\project\matplotlib_project\saved_png\monthly_trend_of_balance.png')
-								</blockquote>
+
+
 								<h2>Comments</h2>
-								<p>Notice the vertical axis is marked at multiples of 10,000,000 just like in Web Intelligence. The marker and markersize has been customized. At Amount = 0, notice the thin grey line.
-									On the horizontal axis, notice the xlabels have been rotated by 25 degrees and we only have a grid pattern on vertical axis. I have set ha='right' in plt.xticks() for readability.
-									The range of vertical axis is -20,000,000 to 40,000,000.
-								</p>
+								<p>Amount is on the left axis and number of transactions is on the right. Major ticks on amount axis is in multiple of 10,000,000. 
+									It is in multiple of 5000 on the right. Amount is plotted in blue with 'o' as marker. #transactions is in cyan with 'x' as marker. 
+									I could have use a legend but this will take up too much space. Instead i annotate inside the graph with axes_1.text() with matching colors.</p>
+
+									<p>A person looking at the graph will notice the sharp drop in Jan 2013 amount accompanied by rise in number of transactions. The bank might want to follow up with further analysis.</p>
 
 								
 

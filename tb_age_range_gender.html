@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Total Balance by Age Range and Gender</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class=""></a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Portfolio Main Page</a></li>
+
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/fuhhanchang/" class="icon brands alt fa-linkedin"><span class="label">linkedin</span></a></li>
+							<li><a href="https://github.com/fuhan2000" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									
+									<h1>Using Squarify <br />
+										</h1>
+									<p>Creating a treemap to show total balance by age range and gender</p>
+								</header>
+
+								<div class="image main"><img src="images/square_treemap/square_treemap.png" alt="" /></div>
+								<p>Here I will create the above graph.<br/> </p>
+								
+								
+								
+								<h2>Original csv file</h2>
+								<p>The original CSV file looks like this.</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/square_treemap/orig_csv.png" alt=""></div></figure>
+								<p>We have a total of three columns. Lets add in 'Percentage' and 'Label' columns. 'Percentage' will tell how much a particular age group save in the bank. We will use 'Label'
+									in treemap. Our CSV will look like this:
+								</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/square_treemap/new_csv.png" alt=""></div></figure>
+								<p><br/></p>
+								<h2>Install squarify </h2>
+								
+								<blockquote># Install squarify if necessary.<br/>
+									#<br/>
+									!pip install squarify</blockquote>
+
+								<h2>Import Libraries</h2>
+								<blockquote>import numpy as np<br/>
+									import pandas as pd<br/>
+									import matplotlib<br/>
+									import matplotlib.pyplot as plt<br/>
+									import squarify</blockquote>
+
+								<h2>Import data into a data frame</h2>
+								<blockquote># Read csv into data frame.<br/>
+									tot_bal_by_age_gender_en_df = pd.read_csv(r'E:\project\matplotlib_project\total_balance_by_age_range_and_gender_enhanced.csv')<br/>
+									tot_bal_by_age_gender_en_df<br/>
+								</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/square_treemap/en_df.png" alt=""></div></figure>
+								<p><br/></p>	
+								<h2>Converting to Numpy array</h2>
+								<blockquote># convert to numpy<br/>
+									np_arr_en = tot_bal_by_age_gender_en_df.to_numpy()<br/>
+									np_arr_en<br/>
+								</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/square_treemap/en_array.png" alt=""></div></figure>
+								<h2>Plotting the Graph</h2>
+								<blockquote># amout will be used to determine size of rectangles<br/>
+									# labels will be used in labelling<br/>
+									amount = np_arr_en[:,2]<br/>
+									labels = np_arr_en[:,4]<br/>
+									<p><br/></p>
+									# width, height<br/>
+									plt.rcParams.update({'figure.figsize':(10,6), 'figure.dpi':100})<br/>
+									# Utilise matplotlib to scale our goal numbers between the min and max, then assign this scale to our values.<br/>
+									#  linearly normalizes data into the [0.0, 1.0] interval.<br/>
+									# Upper limit of 50,000,000 will indicate deepest blue.<br/>
+									# Lower limit of 0 will be lighest blue.<br/>
+									# Max of amount is around 46,000,000<br/>
+									#<br/>
+									# 'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds'<br/>
+									# are possible colormaps (cm).<br/>
+									norm = matplotlib.colors.Normalize(0, 50000000)<br/>
+									colors = [matplotlib.cm.Blues(norm(amt)) for amt in amount]<br/>
+									colors<br/>
+								</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/square_treemap/color_array.png" alt=""></div></figure>
+								<p><br/></p>
+								<blockquote>plt.rc('font', size=8)<br/>
+									# alpha =0.7 to allow black labels to show through.<br/>
+									# Add padding to our treemap<br/>
+									squarify.plot(sizes=amount, label=labels, color=colors, alpha=0.7, pad=True)<br/>
+									#turn off axis<br/>
+									plt.axis('off')
+								</blockquote>
+
+								
+								<h2>Graph Output</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/square_treemap/square_treemap.png" alt=""></div></figure>
+								<p><br/></p>
+								<h2>comments</h2>
+								<p>I can't seem to find a 'scale' to show the blues color range of (0, 50000000) in squarify.plot. The data for age group 21-30 is a bit squeezed. For this bank, 
+									those over 60 hold about 45% of the balance. The 51-60 hold about 20%. Collectively those who are 51 and above hold 65%. Have to check with bank management if 
+									this is what they want. Perhaps they should do something to attract those in the 41-50 age group. 
+								</p>
+
+
+
+
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<nav id="nav">
+							<ul class="links">
+								<li><a href="index.html">Portfolio Main Page</a></li>
+	
+							</ul>
+						</nav>
+
+						<section class="split contact">
+
+
+
+
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; fuhan</li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

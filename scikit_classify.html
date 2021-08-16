@@ -362,7 +362,8 @@
 									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/sap_conf.png" alt=""></div></figure>
 									<p>The SAP model is better than my python models. TP is 97 while TN is 51789. But still TP is only 0.18%. So SAP model is better at predicting customer who will not 
 									get the product. You can compare the figures here directly with their python counterparts as I have set the testing sample size at 53750 (or 20% of total sample size 268747). <br/>
-									The fact that SAP perform better should not be a surprise as they will use AutoML in determining the best classification model. In my python model, i only use linear_model.LinearRegression().
+									The fact that SAP perform better should not be a surprise as they will use AutoML in determining the best classification model. In my python model, i only use 
+									RFC(200 trees) and NN (3 hidden layers with 11 nodes each, 5000 iterations).
 									</p>
 									
 									<h2>Advice to the bank</h2>

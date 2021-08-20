@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Scikit-learn Regression</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class=""></a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Portfolio Main Page</a></li>
+
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/fuhhanchang/" class="icon brands alt fa-linkedin"><span class="label">linkedin</span></a></li>
+							<li><a href="https://github.com/fuhan2000" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									
+									<h1>Scikit-learn Regression<br />
+										</h1>
+									<p>I will attempt to recreate a regression model that was created earlier in SAP Predictive Analytics.</p>
+								</header>
+
+								<div class="image main"><img src="images/unit13_ex6/unit13_ex6.png" alt="" /></div>
+								<p>Above is what I got from SAP when creating a regression model. It selected 15 variables out of 69 possible variables. Those are:</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/max_smart_var.png" alt=""></div></figure>
+								<p>Recreating this model is a good chance to practice my python. KxTimeStamp refers to a time value of interest to the business user. Some comments on the features' names:
+								</p>
+								<table style="width:100%">
+									<tr>
+										<th>Feature</th>
+										<th>Description</th>
+									</tr>
+									<tr>
+										<td>ACCOUNT_DATE_DoW</td><td>Day of week of ACCOUNT_DATE of CS_ACCOUNT table</td>	
+									</tr>
+									<tr>
+										<td>AVERAGE_BALANCE_1Y6B_AVG_0_BALANCE</td><td>AVERAGE_BALANCE for a period of 6 months before KxTimeStamp</td>
+									</tr>
+									<tr>
+										<td>BIRTH_DATE_M</td><td>Month of BIRTH_DATE of CS_CLIENT table</td>
+									</tr>
+									<tr>
+										<td>CARD_AGE</td><td>Card age in days between KxTimeStamp and its date of issue</td>
+									</tr>
+									<tr>
+										<td>CLIENT_AGE</td><td>Client Age in years</td>
+									</tr>
+									<tr>
+										<td>DATE_DoW</td><td>Day of week of date of CS_LOANS table</td>
+									</tr>
+									<tr>
+										<td>DATE_Y</td><td>Year of the date of CS_LOANS table</td>
+									</tr>
+									<tr>
+										<td>DISTRICT_NAME</td><td>Defined in CS_GEODEMO table</td>
+									</tr>
+									<tr>
+										<td>DURATION</td><td>Duration of CS_LOANS table</td>
+									</tr>
+									<tr>
+										<td>EST_ANNUAL_INCOME_1Y1B_SUM_0_AMOUNT</td><td>EST_ANNUAL_INCOME for a period of 1 year before KxTimeStamp</td>
+									</tr>
+									<tr>
+										<td>GEOCODE_ID</td><td>District Code of CS_GEODEMO table</td>
+									</tr>
+									<tr>
+										<td>MAX_BALANCE_1M6B_MAX_0_BALANCE</td><td>Max Balance Amount for a period of six months before KxTimeStamp</td>
+									</tr>
+									<tr>
+										<td>MAX_PAYMENT_1M6B_MAX_0_BALANCE</td><td>Max Payment Amount for a period of six months before KxTimeStamp</td>
+									</tr>
+									<tr>
+										<td>MIN_BALANCE_1M6B_MIN_0_BALANCE</td><td>MIN_BALANCE for a period of 6 months before KxTimeStamp</td>
+									</tr>
+									<tr>
+										<td>PAYMENT</td><td>Payment value as defined in CS_LOANS table</td>
+									</tr>
+								</table>
+								
+								
+								<h2>Date Variables in SAP</h2>
+								<p>SAP do some encoding on date variables as part of its AutoML process. See picture below for more details.</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/sap_enc.png" alt=""></div></figure>
+								<p>So the variableName_Y or variableName_DoW is auto-created by SAP.</p>
+
+								<h2>Import CSV into data frame</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/csv.png" alt=""></div></figure>
+								<p>I extracted the above csv from HANA and import it into a dataframe</p>
+
+								
+								<blockquote>import pandas as pd<br/>
+									from sklearn import linear_model<br/>
+									from sklearn.preprocessing import StandardScaler, LabelEncoder<br/>
+									from sklearn.model_selection import train_test_split<br/>
+									from matplotlib import pyplot as plt</blockquote>
+
+								<blockquote>forecast_df = pd.read_csv(r'E:\project\unit13_ex6_regress\unit13_ex6_v2.csv')<br/>
+								forecast_df
+								</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/dataframe.png" alt=""></div></figure>
+								<h2>Fill NaN with zeros</h2>
+								<blockquote>forecast_df.isna().sum().sort_values(ascending=False)</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/nan.png" alt=""></div></figure>
+								<blockquote>forecast_df = forecast_df.fillna(0)</blockquote>
+								<p>There is no more NaN.</p>
+								<h2>Encode all non-numeric to numeric</h2>
+								<blockquote># encode DISTRICT_NAME<br/>
+									enc = LabelEncoder()<br/>
+									enc.fit(forecast_df ['DISTRICT_NAME'])<br/>
+									forecast_df ['DISTRICT_NAME'] = enc.transform(forecast_df ['DISTRICT_NAME'])<br/>
+									forecast_df
+								</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/dataframe2.png" alt=""></div></figure>
+								<p><br/></p>
+								<h2>Seperate the response and feature variables</h2>
+								<p>We do not need the features BIRTH_DATE, ACCOUNT_DATE and DATE. Our response variable shall be TARGET_DEPOSIT_NEXT_3_MONTHS.</p>
+								<blockquote># Now seperate the dataset as response variable and feature variabes<br/>
+									# capital X <br/>
+									# small y <br/>
+									X = forecast_df.drop(['BIRTH_DATE', 'ACCOUNT_DATE', 'DATE','TARGET_DEPOSIT_NEXT_3_MONTHS'], axis = 1)<br/>
+									y = forecast_df['TARGET_DEPOSIT_NEXT_3_MONTHS']</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/xy.png" alt=""></div></figure>
+								<h2>Scatter plot of 15th column vs y</h2>
+								<p>MAX_BALANCE_1M6B_MAX_0_BALANCE is the 15th column. We can do a scatterplot just to get a feel of the data. Only a partial view of X dataframe is shown below.</p>
+								<blockquote>X</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/X.png" alt=""></div></figure>
+								<blockquote>plt.scatter(X[X.columns[14]], y)<br/>
+									plt.show()</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/scatter.png" alt=""></div></figure>
+								<p>There seem to be a linear relationship in the graph above.</p>
+
+								<h2>Linear Regression Model</h2>
+								<blockquote>
+									#algorithm<br/>
+									l_reg = linear_model.LinearRegression()<br/>
+									X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)<br/>
+									#train<br/>
+									model = l_reg.fit(X_train, y_train)<br/>
+									predictions = model.predict(X_test)<br/>
+									print("predictions: ", predictions)<br/>
+									# <br/>
+									print("R^2: ", l_reg.score(X, y))<br/>
+									print("coeff: ", l_reg.coef_)<br/>
+									print("intercept: ", l_reg.intercept_)<br/>
+								</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/predic.png" alt=""></div></figure>
+
+								<p>Our R^2 is 0.53. We can see the coefficients for all 15 features. </p>
+
+								<p> Lets calculate the R^2 for train and test datasets. We will compare them with their SAP counterparts. In SAP train is equivalent to estimation and test is to Validation.</p>
+								<blockquote># train or Estimation<br/>
+									print("R^2 train: ", l_reg.score(X_train, y_train))</blockquote>
+								<p>R^2 train:  0.5346021411908728</p>
+								<blockquote># test or Validation<br/>
+									print("R^2 test: ", l_reg.score(X_test, y_test))</blockquote>
+								<p>R^2 test:  0.500553057193385</p>
+
+								<h2>Comparision with SAP</h2>
+								<p>SAP train and test R^2 can be seen in the table below:</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex6/L1.png" alt=""></div></figure>
+								<p>SAP R^2 train is 0.569 and test is 0.5111. This compare with 0.535 and 0.501 for python models.</p>
+
+								<h2>Conclusion</h2>
+								The python model is equivalent to SAP. Doing such python programming enables me to have a deeper understanding of what goes on in the background as SAP does its
+								AutoML process. 
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<nav id="nav">
+							<ul class="links">
+								<li><a href="index.html">Portfolio Main Page</a></li>
+	
+							</ul>
+						</nav>
+
+						<section class="split contact">
+
+
+
+
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; fuhan</li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

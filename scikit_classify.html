@@ -43,136 +43,96 @@
 									
 									<h1>Scikit-learn Classification <br />
 										</h1>
-									<p>We are trying to determine if an existing bank customer will take up a new credit card based upon
-										his behavior with regards to twenty other products.
+									<p>We are trying to classify whether a bank customer will default on his loan.
 									</p>
 								</header>
 
-								<div class="image main"><img src="images/unit13_ex1/unit13_roc.png" alt="" /></div>
-								<p>Prior to this, I have already run the dataset through SAP Predictive Analytics. The Predictive Power (KI) is 0.35 and Prediction Confidence (KR) is 0.98. 
-								The ROC curve is better than a random model but not great. In an ideal world, you will add additional columns to improve KI and ROC. In real-life, the data might not be there 
-								or there may be privacy laws that prevent the usage of those data. The best the bank can do is to provide data on customer behavior towards twenty other products.</p>
-
-								<p> Here I will clean up the data in SQL, use python to do some transformation and finally use Random Forest and neural network to do classification. I will also comment
-									on SAP output on the same dataset.
-								</p>
-
+								<div class="image main"><img src="images/unit13_ex4/unit13_ex4.png" alt="" /></div>
+								<p>Prior to this, I have already run the dataset through SAP Predictive Analytics. The Predictive Power (KI) is 0.8585 and Prediction Confidence (KR) is 0.9611. 
+								I will attempt to recreate this classification model in python using Random forest, Support vector machine and Neural network. We will see that there are interesting results.</p>
 								
+								<h2>Most Influential Variables</h2>
+								<p>As part of its AutoML process, SAP has decided that the following 16 variables have the most influence.</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/max_smart.png" alt=""></div></figure>
 								<p><br/></p>
-								<h2>Importing Data into MySQL</h2>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/unit13_sql.png" alt=""></div></figure>
-								<p><br/></p>
-								<p> These are some of the codes I use to create a table. The table is 268747 rows x 269 columns. </p>
-								<blockquote>
-									LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 5.7/Uploads/forecast_propensity_new_card_unit13_ex1.csv'<br/>
-									INTO TABLE forecast_propensity_new_card <br/>
-									FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'<br/>
-									-- IGNORE 1 ROWS <br/>
-									(.. many_columnsNames..)</blockquote>
-
-								<p>Then load my data into the table. Some comments on the columns names:<br/>
-								<table style="width:100%">
+								<table style="width: 100%">
 									<tr>
 										<th>Column Name</th>
 										<th>Description</th>
 									</tr>
 									<tr>
-										<td>KxId</td>
-										<td>created by HANA</td>
+										<td>ACCOUNT_AGE</td>
+										<td>Account Age in days</td>
 									</tr>
 									<tr>
-										<td>KxTimeStamp</td>
-										<td>created by HANA to show the reference time selected by end user</td>
+										<td>ACCOUNT_DATE_DoY</td>
+										<td>Day of the current year (1 to 366)</td>
 									</tr>
 									<tr>
-										<td>GENDER_TYPE</td>
-										<td>gender of the customer</td>
+										<td>AVERAGE_BALANCE_1M6B_AVG_0_BALANCE</td>
+										<td>Average Balance for a period of 6 months before KxTimeStamp</td>
 									</tr>
 									<tr>
-										<td>AGE_GROUP</td>
-										<td>age group of the customer</td>
+										<td>BIRTH_DATE_DoY</td>
+										<td>Day of the birth date year</td>
 									</tr>
 									<tr>
-										<td>EMAIL_FLG</td>
-										<td>customer's email</td>
+										<td>CARD_AGE</td>
+										<td>Card Age in days</td>
 									</tr>
 									<tr>
-										<td>ADDRESS_FLG</td>
-										<td>customer's address</td>
+										<td>CARD_DATE_Y</td>
+										<td>Card issue date</td>
 									</tr>
 									<tr>
-										<td>TENURE</td>
-										<td>how long the customer has been with the bank</td>
+										<td>CLIENT_AGE</td>
+										<td>Client Age in years</td>
 									</tr>
 									<tr>
-										<td>PROD_6M6B_PRODUCT_10xxxxx_SUM_y_AMOUNT</td>
-										<td>sum of sales amount for product 10xxxxx (6-y) months before reference date</td>
+										<td>CLIENT_TYPE</td>
+										<td>Internal classification use by Bank</td>
 									</tr>
 									<tr>
-										<td>PROD_6M6B_PRODUCT_1000367_SUM_0_AMOUNT</td>
-										<td>sum of sales amount for product 1000367 six months before reference date</td>
-									</tr>	
-									<tr>
-										<td>PROD_6M6B_PRODUCT_1000367_SUM_5_AMOUNT</td>
-										<td>sum of sales amount for product 1000367 one month before reference date</td>
+										<td>DISTRICT_NAME</td>
+										<td>District Name as defined in CS_GEODEMO</td>
 									</tr>
 									<tr>
-										<td>PROD_6M6B_SUM_0_AMOUNT</td>
-										<td>sum of sales amount per month six months ago</td>
-									</tr>		
-									<tr>
-										<td>PROD_6M6B_SUM_0_DISCOUNT</td>
-										<td>sum of discount per month six months ago</td>
-									</tr>	
-									<tr>
-										<td>SUM_SUM_AMOUNT</td>
-										<td>sum of sales amount over the past six months</td>
-									</tr>	
-									<tr>
-										<td>SUM_SUM_DISCOUNT</td>
-										<td>sum of discount amount over the past six months</td>
-									</tr>	
-									<tr>
-										<td>CNT_6M6B_CNT_0_NoOperande</td>
-										<td>frequency count of number of transactions per month six months ago</td>
-
+										<td>GEOCODE_ID</td>
+										<td>District Code as defined in CS_GEODEMO</td>
 									</tr>
-								
+									<tr>
+										<td>LOAN_AMOUNT</td>
+										<td>Loan amount issue to a customer</td>
+									</tr>
+									<tr>
+										<td>LOAN_DATE_M</td>
+										<td>Month of loan date</td>
+									</tr>
+									<tr>
+										<td>LOAN_DATE_Y</td>
+										<td>Year of loan date</td>
+									</tr>
+									<tr>
+										<td>LOAN_PAYMENTS</td>
+										<td>Payment value</td>
+									</tr>
+									<tr>
+										<td>MIN_PAYMENT_1M6B_MIN_0_BALANCE</td>
+										<td>Minimum payment amount over the past 6 months</td>
+									</tr>
+									<tr>
+										<td>NUMBER_INHABITANTS</td>
+										<td>Number of inhabitants as defined in CS_GEODEMO</td>
+									</tr>
 								</table>
-
-
-								</p>
-								<h2>Cleaning Data in SQL</h2>
-								<blockquote>update forecast_propensity_new_card as f<br/>
-									set f.PROD_6M6B_PRODUCT_1016578_SUM_0_AMOUNT =0<br/>
-									where f.PROD_6M6B_PRODUCT_1016578_SUM_0_AMOUNT ='';</blockquote>
-
-								<p>There is a lot of empty fields which i fill with zeros.</p>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/unit13_age_group_orig.png" alt=""></div></figure>
-								<p>AGE_GROUP, EMAIL_FLG, ADDRESS_FLG is tidied up. </p>
-								
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/age_group_new.png" alt=""></div></figure>
 								<p><br/></p>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/new_email.png" alt=""></div></figure>
-								<p><br/></p>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/new_addr.png" alt=""></div></figure>
-								
-								<h2>Exporting to CSV </h2>
-								<blockquote>-- export as csv<br/>
-									SELECT *<br/>
-									FROM forecast_propensity_new_card<br/>
-									INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 5.7/Uploads/clean_forecast_propensity_new_card.csv' <br/>
-									LINES TERMINATED BY '\r\n';<br/>
-									</blockquote>
-
-								<p><br/></p>
-								<h2>Importing Libraries</h2>
+								<h2>Import Libraries</h2>
 								<blockquote>#Importing required packages.<br/>
 									import pandas as pd<br/>
 									import seaborn as sns<br/>
 									import matplotlib.pyplot as plt<br/>
 									from sklearn.ensemble import RandomForestClassifier<br/>
-									
+									from sklearn import svm<br/>
 									from sklearn.neural_network import MLPClassifier<br/>
 									from sklearn import linear_model<br/>
 									#<br/>
@@ -180,196 +140,149 @@
 									from sklearn.metrics import mean_squared_error, r2_score<br/>
 									from sklearn.preprocessing import StandardScaler, LabelEncoder<br/>
 									from sklearn.model_selection import train_test_split<br/>
-									%matplotlib inline</blockquote>
-								<p><br/></p>
-								<h2>Read into data frame</h2>
-								<blockquote># read into data frame<br/>
-									predict_propensity = pd.read_csv(r'E:\project\mysql_unit13_ex1_classify\clean_forecast_propensity_new_card.csv')
-									predict_propensity.head()<br/>
+									%matplotlib inline
 								</blockquote>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/df_head.png" alt=""></div></figure>
+								
+								<h2>Inport data into data frame</h2>
+								<blockquote>predict_df = pd.read_csv(r'E:\project\unit13_ex4_classify\unit13_ex4.csv')<br/>
+									predict_df.head()</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/df.png" alt=""></div></figure>
 								<p><br/></p>
-								<h2>Checking for NULL</h2>
+								<h2>Check for Nulls</h2>
 								<blockquote># checking to see if there's any null variables<br/>
 									# <br/>
-									predict_propensity.isnull().sum().sort_values(ascending = False)</blockquote>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/any_nan.png" alt=""></div></figure>
-								<p><br/></p>
-								<p>We do not have any null values.</p>
-								<p><br/></p>
-								<h2>Checking TARGET column</h2>
-								<blockquote># Target 0: customer did not purchase at least one of the card<br/>
-									# Target 1: customer did purchase.<br/>
-									predict_propensity['TARGET'].unique()</blockquote>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/array_0_1.png" alt=""></div></figure>
-								
-								<p><br/></p>
-								<blockquote>sns.countplot(predict_propensity['TARGET'])</blockquote>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/countplot.png" alt=""></div></figure>
-								<p><br/></p>
-								<blockquote># Get actual count of number of Target '0' and '1'<br/>
-									# does not matter if u use 'KxId'<br/>
-									By_Target = predict_propensity.groupby('TARGET')<br/>
-									By_Target = By_Target.count()<br/>
-									By_Target = By_Target[['KxId']]<br/>
-									By_Target</blockquote>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/kxid.png" alt=""></div></figure>
-								<p>We have 5816 Target '1' and 262931 '0'</p>
+									predict_df.isnull().sum().sort_values(ascending = False)</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/null.png" alt=""></div></figure>
+								<blockquote># fill all NaN with 0<br/>
+									predict_df = predict_df.fillna(0)</blockquote>
 
-								<h2>Encode GENDER_TYPE</h2>
-								<blockquote>def GENDER_TYPE_encode(n):<br/>
-									if n == 'M':<br/>
-										return 1<br/>
-									else:<br/>
-										return 0<br/>
-								predict_propensity['GENDER_TYPE_enc'] = predict_propensity.GENDER_TYPE.apply(GENDER_TYPE_encode)<br/>
-								predict_propensity</blockquote>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/gender_enc.png" alt=""></div></figure>
-								<p>GENDER_TYPE: M =1, F=0</p>
-								<h2>Encode AGE_GROUP</h2>
-								<blockquote>def AGE_GROUP_encode(n):<br/>
-									if n== "<=17":<br/>
-										return 0<br/>
-									elif n== "18 - 25":<br/>
-										return 1<br/>
-									elif n=="26 - 35":<br/>
-										return 2<br/>
-									elif n=="36 - 45":<br/>
-										return 3<br/>
-									elif n=="46 - 60":<br/>
-										return 4<br/>
-									elif n==">60":<br/>
-										return 5<br/>
-									elif n=="-":<br/>
-										return 6<br/>
-									else:<br/>
-										return 7<br/>
-								predict_propensity['AGE_GROUP_enc'] = predict_propensity.AGE_GROUP.apply(AGE_GROUP_encode)</blockquote>
-
-								<h2>check data frame data types</h2>
-								<blockquote>predict_propensity.dtypes</blockquote>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/dtypes.png" alt=""></div></figure>
+								<h2>Check the label column</h2>
+								<blockquote>sns.countplot(predict_df['TARGET'])</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/count0.png" alt=""></div></figure>
+								<blockquote># see how many 0 and 1 in TARGET column<br/>
+									predict_df['TARGET'].value_counts()</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/0and1.png" alt=""></div></figure>
 								<p><br/></p>
-								<h2>Training and testing datasets</h2>
-								<blockquote># Now seperate the dataset as response variable and feature variabes<br/>
+								<h2>Change CLIENT_TYPE to numeric</h2>
+								<blockquote>enc = LabelEncoder()<br/>
+									enc.fit(predict_df['CLIENT_TYPE'])<br/>
+									predict_df['CLIENT_TYPE'] = enc.transform(predict_df['CLIENT_TYPE'])<br/>
+									predict_df['CLIENT_TYPE'].head()</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/client_type.png" alt=""></div></figure>
+								<p><br/></p>
+								<h2>Change DISTRICT_NAME to numeric</h2>
+								<blockquote>enc.fit(predict_df['DISTRICT_NAME'])<br/>
+									predict_df['DISTRICT_NAME'] = enc.transform(predict_df['DISTRICT_NAME'])<br/>
+									predict_df['DISTRICT_NAME'].head()
+								</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/district.png" alt=""></div></figure>
+								<p><br/></p>
+								<h2>Seperate the features and label</h2>
+								<blockquote>
+									# Now seperate the dataset as response variable and feature variabes<br/>
 									# capital X <br/>
 									# small y <br/>
-									X = predict_propensity.drop(['KxId', 'KxTimeStamp','GENDER_TYPE', 'AGE_GROUP', 'TARGET'], axis = 1)<br/>
-									y = predict_propensity['TARGET']<br/>
-									#Train and Test splitting of data <br/>
+									X = predict_df.drop(['KxId', 'KxTimeStamp','CLIENT_ID','ACCOUNT_ID', 'EST_ANNUAL_INCOME_1Y1B_SUM_0_AMOUNT','MAX_PAYMENT_1M6B_MAX_0_BALANCE',<br/>
+									'AVERAGE_PAYMENT_1M6B_AVG_0_BALANCE','HOME_GEOCODE_ID', 'GENDER', 'BIRTH_DATE', 'BRANCHID', 'R','FREQUENCY', 'ACCOUNT_DATE', 'REGION_NAME',<br/>
+									'NUMBER_CITIES_S', 'NUMBER_CITIES_M', 'NUMBER_CITIES_L', 'NUMBER_CITIES_XL','NUMBER_CITIES','URBAN_RATIO', 'AVERAGE_SALARY','UNEMP_RATE_2016', <br/>
+									'UNEMP_RATE_2017','RATIO_ENTREPRENEURS', 'NUMBER_CRIMES_2016','NUMBER_CRIMES_2017', 'LOAN_ID', 'LOAN_DURATION', 'LOAN_STATUS', 'LOAN_DATE',
+									'CARD_ID','CARD_TYPE','CARD_DATE',  'TARGET'], axis = 1)<br/>
+								</blockquote>
+								<blockquote>y = predict_df['TARGET']</blockquote>
+								<blockquote># we will have 16 features<br/>
+									X.shape</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/16fea.png" alt=""></div></figure>
+								<blockquote>#Train and Test splitting of data <br/>
 									# test size is 20%<br/>
 									X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)<br/>
-								</blockquote>
-								<h2>Apply Standard Scaling</h2>
-								<blockquote>
 									# Applying Standard scaling to get optimized result<br/>
+									# Need to normalize all our X<br/>
+									#<br/>
 									sc = StandardScaler()<br/>
-									X_train = sc.fit_transform(X_train) # do fit and transform<br/>
-									X_test = sc.transform(X_test) #do only transform<br/>
+									X_train = sc.fit_transform(X_train) <br/>
+									X_test = sc.transform(X_test) <br/>
 								</blockquote>
-								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/xtrain_xtest.png" alt=""></div></figure>
-								<p><br/></p>
+
 								<h2>Random forest classifier</h2>
 								<blockquote># use 200 trees in the forest<br/>
+								#<br/>
+								rfc = RandomForestClassifier(n_estimators=200)<br/>
+								# fit our training data<br/>
+								rfc.fit(X_train, y_train)<br/>
+								pred_rfc = rfc.predict(X_test)</blockquote>
+
+								<Blockquote>#Let's see how our model performed<br/>
+									# y_test is the actual value<br/>
 									#<br/>
-									rfc = RandomForestClassifier(n_estimators=200)<br/>
-									# fit our training data<br/>
-									rfc.fit(X_train, y_train)<br/>
-									pred_rfc = rfc.predict(X_test)</blockquote>
-									<blockquote>#Let's see how our model performed<br/>
-										# y_test is the actual value<br/>
-										# pred_rfc is the predicted value<br/>
-										# classification_report(y_true, y_pred)<br/>
-										print(classification_report(y_test, pred_rfc))</blockquote>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/rfc_classify.png" alt=""></div></figure>
-									<p><br/></p>
-									<p>precision(1): precision in determining customer who do get product = 3%<br/>
-									precision(0): precision in determining customer who do not get product = 98%<br/>
-									overall precision is 96%. We are not good with predicting customer who will get the product.
-									</p>
-									<blockquote>#Confusion matrix for the random forest classification<br/>
-										# sklearn.metrics.confusion_matrix(y_true, y_pred)<br/>
-										
-										cf_matrix = confusion_matrix(y_test, pred_rfc)<br/>
-										cf_matrix</blockquote>
-										<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/cf_matrix.png" alt=""></div></figure>
-										<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/tn.png" alt=""></div></figure>
-									<p>Our True Positive is only 4. This fits with the low precision(1) of 3%. Our model is better at predicting customer who will not choose the product as seen in 
-										True Negative of 52487.
-									</p>
+									# pred_rfc is the predicted value<br/>
+									print(classification_report(y_test, pred_rfc))</Blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/rfc_cr.png" alt=""></div></figure>
+								<p>Precision(1): precision in determining customer who default: 100%. This look suspicious. </p>
 
-									<h2>Accuracy score from RFC</h2>
-									<blockquote># sklearn.metrics.accuracy_score(y_true, y_pred)<br/>
-										from sklearn.metrics import accuracy_score<br/>
-										myac = accuracy_score(y_test, pred_rfc)<br/>
-										myac</blockquote>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/myac.png" alt=""></div></figure>
-									<p>Our RFC is about 98% accurate.</p>
+								<blockquote>#Confusion matrix for the random forest classification<br/>
+								# sklearn.metrics.confusion_matrix(y_true, y_pred)<br/>
+								cf_matrix = confusion_matrix(y_test, pred_rfc)<br/>
+								tn, fp, fn, tp = cf_matrix.ravel()<br/>
+								tn, fp, fn, tp</blockquote>
+								<p>(737, 0, 14, 76)</p><br/>
+								<p>TP=76, TN=737. This compare with SAP TP = 43, TN= 700</p>
+								<blockquote># sklearn.metrics.accuracy_score(y_true, y_pred)<br/>
+									from sklearn.metrics import accuracy_score<br/>
+									myac_rfc = accuracy_score(y_test, pred_rfc)<br/>
+									myac_rfc</blockquote>
+								<p>0.9830713422007256</p><br/>
+								<p>The accuracy score looks suspicious.</p>
 
-									<h2>Neural Network Multi-layer Perceptron classifier</h2>
-									<blockquote># NN Multi-layer Perceptron classifier<br/>
-										# we will have three layers.<br/>
-										# each layer has 11 nodes<br/>
-										#<br/>
-										mlpc = MLPClassifier(hidden_layer_sizes=(11,11,11), max_iter=5000)<br/>
-										mlpc.fit(X_train, y_train)<br/>
-										pred_mlpc = mlpc.predict(X_test)
-									</blockquote>
-									<blockquote># Let see how our model performed<br/>
-										print(classification_report(y_test, pred_mlpc ))<br/>
-										print(confusion_matrix(y_test, pred_mlpc ))
-									</blockquote>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/nn_classi.png" alt=""></div></figure>
-									<p>Our TN is 52561 but our TP is too low at 7. This TP is only marginally better than RFC's TP.</p>
+								<h2>SVM</h2>
 
-									<h2>Accuracy score from NN</h2>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/accu_nn.png" alt=""></div></figure>
-									<p><br/></p>
-									<h2>Comment on accuracy score from RFC and NN</h2>
-									<p>Both RFC and NN are around 98% accurate.</p>
+								<blockquote>clf=svm.SVC()<br/>
+									clf.fit(X_train, y_train)<br/>
+									pred_clf = clf.predict(X_test)<br/>
+									print(classification_report(y_test, pred_clf))
+								</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/svm_cr.png" alt=""></div></figure>
+								<p>A precision(1) of 0% look suspicious.</p>
+								<blockquote>
+									cf_matrix_svm = confusion_matrix(y_test, pred_clf)<br/>
+									tn, fp, fn, tp = cf_matrix_svm.ravel()<br/>
+									tn, fp, fn, tp
+								</blockquote>
+								<p>(737, 0, 90, 0)</p>
+								<blockquote>myac_svm = accuracy_score(y_test,pred_clf )<br/>
+									myac_svm</blockquote>
+								<p>0.8911729141475212</p>
 
-									<h2>Linear Regression Model</h2>
-									<blockquote># Create linear regression object<br/>
-									reg = linear_model.LinearRegression()<br/>
-									# Train the model using the training sets<br/>
-									reg.fit(X_train, y_train)<br/>
-									# Make predictions using the testing set<br/>
-									y_pred = reg.predict(X_test)<br/>
+								<h2>Neural Network</h2>
+								<blockquote># NN Multi-layer Perceptron classifier<br/>
+									# we will have three layers.<br/>
+									# each layer has 11 nodes<br/>
+									mlpc = MLPClassifier(hidden_layer_sizes=(11,11,11), max_iter=5000)<br/>
+									mlpc.fit(X_train, y_train)<br/>
+									pred_mlpc = mlpc.predict(X_test)</blockquote>
+								
+								<blockquote>print(classification_report(y_test, pred_mlpc ))</blockquote>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/nn_cr.png" alt=""></div></figure>
+								<blockquote>cf_matrix_nn = confusion_matrix(y_test, pred_mlpc)<br/>
+									tn, fp, fn, tp = cf_matrix_nn.ravel()<br/>
+									tn, fp, fn, tp</blockquote>
+								<p>(717, 20, 33, 57)</p>
+								<p>TN=717, TP = 57</p>
+								<blockquote>myac_NN = accuracy_score(y_test, pred_mlpc)<br/>
+									myac_NN</blockquote>
+								<p>0.9359129383313181</p>
+								<p>Neural network has an accuracy of 93.6%. Among these three models, neural network is the closest to SAP.</p>
+								<h2>SAP model</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/sap_conf.png" alt=""></div></figure>
+								<p>SAP has an overall accuracy of 89.86%. Neural network TP and TN are 57 and 717 respectively. SAP's TP and TN are 43 and 700 respectively. The figures can be 
+									compared directly as the test sample size is the same at 827. I have double-checked there are no typo errors and leaker variables. I suspect SAP AutoML process 
+									also detected unusual result in random forest and SVM and rejected those. I have done similar random forest and SVM models on different dataset and did 
+									not face similar issue.</p>
+								<p>AutoML is great except that in this case, it does not tell me which classfication algo it is using. </p>
 
-									# The coefficients<br/>
-									# disable this as I have 266 features<br/>
-									# print('Coefficients: \n', reg.coef_)<br/>
-									# The mean squared error<br/>
-									print('Mean squared error: %.2f'% mean_squared_error(y_test, y_pred))<br/>
-									# The coefficient of determination: 1 is perfect prediction<br/>
-									print('Coefficient of determination: %.2f'% r2_score(y_test, y_pred))</blockquote>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/mse.png" alt=""></div></figure>
-									<p>I have disabled the printing of the 266 coefficients for this model. I have only printed the MSE and coefficient of determination. 
-										MSE should be as low as possible. coefficient of determination should be as close to 1.</p>
-									
-									<h2>Comparision with SAP Output</h2>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/con_sap.png" alt=""></div></figure>
-									<p>In SAP, only eleven variables are kept. These are the variables deemed to have significant impacts on the model outcome. </p>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/automl.png" alt=""></div></figure>
-									<p>In our case, the model stop at Iterations:6 with KI = 0.3509 and KR = 0.9837.</p>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/sc.png" alt=""></div></figure>
-									<p>To see the coefficients of the eleven variables, we can access the score card.</p>
+								<h2>Conclusion</h2>
+								I may have to dig deeper into the various algorithms to discover the truth. But for now the SAP model is good enough to deploy as its KI and KR values are good
+								at 0.8585 and 0.9611 respectively. 
 
-									<h2>SAP Exclusion Step</h2>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/variable_ex.png" alt=""></div></figure>
-									<p> We can see which variables were excluded at which steps. </p>
-									<h2>SAP Confusion Matrix</h2>
-									<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex1/sap_conf.png" alt=""></div></figure>
-									<p>The SAP model is better than my python models. TP is 97 while TN is 51789. But still TP is only 0.18%. So SAP model is better at predicting customer who will not 
-									get the product. You can compare the figures here directly with their python counterparts as I have set the testing sample size at 53750 (or 20% of total sample size 268747). <br/>
-									The fact that SAP perform better should not be a surprise as they will use AutoML in determining the best classification model. In my python model, i only use 
-									RFC(200 trees) and NN (3 hidden layers with 11 nodes each, 5000 iterations).
-									</p>
-									
-									<h2>Advice to the bank</h2>
-									<p>The model can be better if I can link other data like income, account balances, various loans' data to it. 
-									Just having data on his behavior with regards to twenty other products is not good enough to classify whether he will take up a new credit card. 
-									There is too many zeros at CNT_6M6B_xx and PROD_6M6B_xx variables.</p>
 							</section>
 
 					</div>

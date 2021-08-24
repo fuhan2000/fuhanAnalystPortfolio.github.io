@@ -49,7 +49,7 @@
 
 								<div class="image main"><img src="images/unit13_ex4/unit13_ex4.png" alt="" /></div>
 								<p>Prior to this, I have already run the dataset through SAP Predictive Analytics. The Predictive Power (KI) is 0.8585 and Prediction Confidence (KR) is 0.9611. 
-								I will attempt to recreate this classification model in python using Random forest, Support vector machine and Neural network. We will see that there are interesting results.</p>
+								I will attempt to recreate this classification model in python using Random forest, Support vector machine and Neural network.</p>
 								
 								<h2>Most Influential Variables</h2>
 								<p>As part of its AutoML process, SAP has decided that the following 16 variables have the most influence.</p>
@@ -217,7 +217,9 @@
 									# pred_rfc is the predicted value<br/>
 									print(classification_report(y_test, pred_rfc))</Blockquote>
 								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/rfc_cr.png" alt=""></div></figure>
-								<p>Precision(1): precision in determining customer who default: 100%. This look suspicious. </p>
+								<p>Precision(1): precision in determining customer who default: 100%. We have high precision and recall. In ML, we want high precision and recall as it means we have
+									highly accurate model.
+								</p>
 
 								<blockquote>#Confusion matrix for the random forest classification<br/>
 								# sklearn.metrics.confusion_matrix(y_true, y_pred)<br/>
@@ -225,13 +227,13 @@
 								tn, fp, fn, tp = cf_matrix.ravel()<br/>
 								tn, fp, fn, tp</blockquote>
 								<p>(737, 0, 14, 76)</p><br/>
-								<p>TP=76, TN=737. This compare with SAP TP = 43, TN= 700</p>
+								<p>TP=76, TN=737. This compare with SAP TP = 43, TN= 700.</p>
 								<blockquote># sklearn.metrics.accuracy_score(y_true, y_pred)<br/>
 									from sklearn.metrics import accuracy_score<br/>
 									myac_rfc = accuracy_score(y_test, pred_rfc)<br/>
 									myac_rfc</blockquote>
 								<p>0.9830713422007256</p><br/>
-								<p>The accuracy score looks suspicious.</p>
+								<p>The accuracy score is 98.3%.</p>
 
 								<h2>SVM</h2>
 
@@ -241,7 +243,7 @@
 									print(classification_report(y_test, pred_clf))
 								</blockquote>
 								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/svm_cr.png" alt=""></div></figure>
-								<p>A precision(1) of 0% look suspicious.</p>
+								<p>A precision(1) and recall(1) of 0% look suspicious.</p>
 								<blockquote>
 									cf_matrix_svm = confusion_matrix(y_test, pred_clf)<br/>
 									tn, fp, fn, tp = cf_matrix_svm.ravel()<br/>
@@ -270,14 +272,13 @@
 								<blockquote>myac_NN = accuracy_score(y_test, pred_mlpc)<br/>
 									myac_NN</blockquote>
 								<p>0.9359129383313181</p>
-								<p>Neural network has an accuracy of 93.6%. Among these three models, neural network is the closest to SAP.</p>
+								<p>Neural network has an accuracy of 93.6%.</p>
 								<h2>SAP model</h2>
 								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/unit13_ex4/sap_conf.png" alt=""></div></figure>
 								<p>SAP has an overall accuracy of 89.86%. Neural network TP and TN are 57 and 717 respectively. SAP's TP and TN are 43 and 700 respectively. The figures can be 
-									compared directly as the test sample size is the same at 827. I have double-checked there are no typo errors and leaker variables. I suspect SAP AutoML process 
-									also detected unusual result in random forest and SVM and rejected those. I have done similar random forest and SVM models on different dataset and did 
-									not face similar issue.</p>
-								<p>AutoML is great except that in this case, it does not tell me which classfication algo it is using. </p>
+									compared directly as the test sample size is the same at 827. I have double-checked there are no typo errors and leaker variables in the SVM model. I suspect SAP AutoML process 
+									also detected unusual result in SVM and rejected it. I have done similar SVM models on different dataset and did not face similar issue.</p>
+								<p>AutoML is great except that in this case, it does not tell me which classfication algorithm it is using. </p>
 
 								<h2>Conclusion</h2>
 								I may have to dig deeper into the various algorithms to discover the truth. But for now the SAP model is good enough to deploy as its KI and KR values are good

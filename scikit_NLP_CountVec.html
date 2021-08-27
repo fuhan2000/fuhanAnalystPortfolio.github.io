@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>NLP Scikit-learn CountVectorizer</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class=""></a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Portfolio Main Page</a></li>
+
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/fuhhanchang/" class="icon brands alt fa-linkedin"><span class="label">linkedin</span></a></li>
+							<li><a href="https://github.com/fuhan2000" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									
+									<h1>NLP Scikit-learn CountVectorizer<br />
+										</h1>
+									<p>I will do natural language processing (NLP) using Scikit-learn CountVectorizer.
+									</p>
+								</header>
+
+								<div class="image main"><img src="images/scikit_NLP_CountVec/scikit_NLP_countvec.png" alt="" /></div>
+								<p>I will make use of Amazon data on books provided by Jianmo Ni of UCSD at his webpage. <a href="https://nijianmo.github.io/amazon/index.html
+									">link here </a></p>
+								<p> I shall described how i extract data from his large dataset, clean up the data before I 'countVectorized', finetune, save and load my model to test with sample text
+									that you can see in the above picture. </p>
+								
+								<h2>Jianmo Ni</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/ni_website.png" alt=""></div></figure>
+								<p>If you goto his website, you will see something like in the picture above. My dataset is from books as highlighted by the red arrow. The dataset is in a 6.6GB json.gz file.
+									As there is no way to open the uncompressed json file with notepad++, he has been very helpful in providing code to read the data into a pandas dataframe. </p>
+								
+								<h2>read data into a data frame</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/read_data.png" alt=""></div></figure>
+								<p>I only take in 10,000 rows. I did try a higher number like 50,000 but then the subsequent modeling takes quite a bit of time.</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/df.png" alt=""></div></figure>
+								<p> We now have two columns in our dataframe: overall and reviewText. overall is rating of the product as determined by amazon customers. reviewText is text of the review. </p>
+
+								<h2>Too many 5 stars rating</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/too_many_5.png" alt=""></div></figure>
+								<p>We have too many 5-stars ratings in our 10,000 records.</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/remap.png" alt=""></div></figure>
+								<p>So i remap all the 1-4 to zero while the 5 change to one. But still we have 7150 ones and 2850 zeroes. </p>
+
+								<h2>dataframe examination</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/df0.png" alt=""></div></figure>
+								CountVectorizer makes use of 'bag of words' to convert sentences to vectors. In order to ensure that only the useful words get vectorized, we need to remove web links, 
+								email addresses, US phone numbers, US dates, numbers and punctuations marks from reviewText. 
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/remove_junk.png" alt=""></div></figure>
+								<p>For determining the reg ex to use, i got help from regextester.com. The reg ex can be a bit long. Just to keep things neat, I keep the reg ex in class Strs. 
+									Function clean_text will take in a df as argument and process it to remove all the texts I deemed of little interest. clean_text will return a list. 
+								</p>
+								<h2>Create new column to store processed text</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/new_df.png" alt=""></div></figure>
+								<p>A new column cleanText is created to store the processed text. cleantext is my feature, overall is my label. </p>
+
+								<h2>Train test split</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/ttt.png" alt=""></div></figure>
+								<p>80% of df goes to training and the rest to test. train_x will have the feature and train_y will have the label.  </p>
+								
+								<h2>countvectorizer</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/countvec.png" alt=""></div></figure>
+								<p>train_x_vectors is a 8000x25405 matrix. Each of its row has 25405 columns and every cell has a vectorizer object. </p>
+
+								<h2>SVM model</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/svm.png" alt=""></div></figure>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/train_y.png" alt=""></div></figure>
+								<p>Mean accuracy of 79.7%. F1(0) of 62.3%. F1(1) of 86.1%. In the train_y data frame, we have 5740 ones and 2260 zeroes. These means ones make up around 72% of the label.</p>
+
+								<h2>Model finetuning</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/training01.png" alt=""></div></figure>
+								<p>Let create a training_01 that have 50% zeroes and 50% ones. We use pandas sample() to randomly shuffle the dataframe. A training_01.tail() confirmed that zeroes and ones are mixed.  
+								</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/retrain.png" alt=""></div></figure>
+								<p>We do train_x, train_y, test_x, test_y again. We vectorized the train_x to create train_x_vectors. The accuracy score is 75.6%. F1(0) is 63.2% and F1(1) is 81.7%. </p>
+
+								<h2>model metrics </h2>
+								<table style="width: 100%">
+								<tr>
+									<th>metrics</th>
+									<th>72%(ones)-28%</th>
+									<th>50%(ones)-50%</th>
+								</tr>
+								<tr>
+									<td>score</td>
+									<td>79.7%</td>
+									<td>75.6%</td>
+								</tr>
+								<tr>
+									<td>F1(0)</td>
+									<td>62.3%</td>
+									<td>63.2%</td>
+								</tr>
+								<tr>
+									<td>F1(1)</td>
+									<td>86.1%</td>
+									<td>81.7%</td>
+								</tr>
+								</table>
+								<p>Our model performance for accuracy score, F1(0) and F1(1) should be quoted at 75.6%, 63.2% and 81.7% respectively. </p>
+
+								<h2>Save, load and test model</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/load.png" alt=""></div></figure>
+								<p>Here we predicted one for a text at row 0 of test_x but the actual label is zero. </p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/row3.png" alt=""></div></figure>
+								<p>Here we predicted one for a text at row 3 of test_x but the actual label is zero. </p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/row10.png" alt=""></div></figure>
+								<p>At row 10, our prediction matches the label. The model make a correct classification of zero.</p>
+
+								<h2>Test on random text</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/test1.png" alt=""></div></figure>
+								<p>"do not buy" should be zero. But our model predict a one</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/test2.png" alt=""></div></figure>
+								<p>"throw book to dustbin" should be zero. 'burn the book' should be zero. So our model is not perfect. I suspect these words are not in the training dataset.
+									Also we have only 4520 rows in the 50%-50% training dataset.
+								</p>
+
+								<h2>Confusion matrix</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_CountVec/cm.png" alt=""></div></figure>
+								<p>TN=420, TP=1091. FP=170 which is 8.5% of test sample size, FN=319 which is around 16% of test sample size. 
+									So when the model is wrong, it is more likely to predict a zero when in actual fact it should be a one. </p>
+								
+								<h2>Conclusion</h2>
+								<p>With an accuracy score of 75.6% based on an initial sampling of 10,000 rows from json.gz, I think this model can be refined by sampling more rows e.g., 1M.
+									I did not do so due to time constraint. Also there are other vectorizer in scikit-learn that i can look into in another project. </p>
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<nav id="nav">
+							<ul class="links">
+								<li><a href="index.html">Portfolio Main Page</a></li>
+	
+							</ul>
+						</nav>
+
+						<section class="split contact">
+
+
+
+
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; fuhan</li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

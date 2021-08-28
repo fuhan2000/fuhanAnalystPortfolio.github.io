@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>NLP Scikit-learn TfidfVectorizer</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class=""></a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Portfolio Main Page</a></li>
+
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/fuhhanchang/" class="icon brands alt fa-linkedin"><span class="label">linkedin</span></a></li>
+							<li><a href="https://github.com/fuhan2000" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									
+									<h1>NLP Scikit-learn TfidfVectorizer<br />
+										</h1>
+									<p>I will do natural language processing (NLP) using Scikit-learn TfidfVectorizer. <br/>
+										This is a follow up to CountVectorizer version.
+									</p>
+								</header>
+
+								<div class="image main"><img src="images/scikit_NLP_tfid/scikit_nlp_tfid.png" alt="" /></div>
+								<p>I will reuse the cleaned data I have save from the earlier CountVectorizer version where I extracted data from 10,000 rows of the json.gz file. 
+									Since the only difference between this and the previous version is in the type of vectorizer used, a fair comparison can be made on their metrics.
+								</p>
+								<h2>Read data into data frame</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/read_data.png" alt=""></div></figure>
+								<p>Just like before we have more ones than zeroes. </p>
+								<h2>Check the data frame</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/df_head.png" alt=""></div></figure>
+								<p>cleanText contains our features. overall contain the label. I make sure my cleanText is of type str just so that it can play nice with vectorizer. </p>
+
+								<h2>Train test split</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/train_test.png" alt=""></div></figure>
+								<p>We assign 20% of df to test and the rest to training.</p>
+
+								<h2>Even distribution of ones and zeroes</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/even_dist.png" alt=""></div></figure>
+								<p>Our training_01 has 50% ones and 50% zeroes. training_01 have its rows shuffled. </p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/train_tail.png" alt=""></div></figure>
+								<p>A check with tail() shows that the training_01 rows are shuffled. </p>
+
+								<h2>TfidfVectorizer</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/tfid_vect.png" alt=""></div></figure>
+								<p>According to scikit-learn.org, "the goal of using tf-idf instead of the raw frequencies of occurrence of a token in a given document is to scale down the 
+									impact of tokens that occur very frequently in a given corpus...". 
+								</p>
+								<p>"This book is good". <br/>
+								"This book is bad"</p>
+
+								<p>So tokens like "this", "book", "is" will be scaled down. "good" and "bad" which occur less frequently will be scaled up.</p>
+
+								<h2>SVM model</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/svm.png" alt=""></div></figure>
+								<p>score 77.9%. F1(0) 67.8% and F1(1) 83.1%. This is on a balanced dataset (2260 ones and 2260 zeroes).</p>
+
+								<h2>CountVectorizer vs TfidfVectorizer</h2>
+								<table style="width: 100%">
+									<tr>
+										<th>metrics</th>
+										<th>CountVectorizer</th>
+										<th>TfidfVectorizer</th>
+									</tr>
+									<tr>
+										<td>score</td>
+										<td>75.6%</td>
+										<td>77.9%</td>
+									</tr>
+									<tr>
+										<td>F1(0)</td>
+										<td>63.2%</td>
+										<td>67.8%</td>
+									</tr>
+									<tr>
+										<td>F1(1)</td>
+										<td>81.7%</td>
+										<td>83.1%</td>
+									</tr>
+
+
+								</table>
+
+								<p>All the above figures are for balanced datasets. We can see there is improvement on all three measures of score, F1(0) and F1(1).</p>
+
+								<h2>Save Load test model</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/save_model.png" alt=""></div></figure>
+								<p>For row 0 of test_x, we predicted a one when the actual label is zero.</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/row3.png" alt=""></div></figure>
+								<p>For row 3 of test_x, we predicted a one when the actual label is zero. </p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/row10.png" alt=""></div></figure>
+								<p>For row 10, predicted = actual label = 0.</p>
+
+								<h2>TEST ON RANDOM TEXT</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/test1.png" alt=""></div></figure>
+								<p>It is correct all 4 times</p>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/test2.png" alt=""></div></figure>
+								<p>"throw book to dustbin" should be zero. "burn the book" should be zero.</p>
+
+								<h2>CONFUSION MATRIX</h2>
+								<figure style="max-width:2388pxpx" class="w-richtext-align-fullwidth w-richtext-figure-type-image"><div><img src="images/scikit_NLP_tfid/cm.png" alt=""></div></figure>
+								<br/>
+								<table style="width: 100%">
+										<tr>
+											<th>metrics</th>
+											<th>tfidfvectorizer</th>
+											<th>countvectorizer</th>
+										</tr>
+										<tr>
+											<td>tn</td>
+											<td>466</td>
+											<td>420</td>
+										</tr>
+										<tr>
+											<td>fp</td>
+											<td>124</td>
+											<td>170</td>
+										</tr>
+										<tr>
+											<td>fn</td>
+											<td>319</td>
+											<td>319</td>
+										</tr>
+										<tr>
+											<td>tp</td>
+											<td>1091</td>
+											<td>1091</td>
+										</tr>
+								</table>
+								<p>tn= 466 (vs 420 in countvectorizer model ). tp = 1091 (same as before). fp = 124 (vs 170). fn = 319 (same as before). 
+									Notice that tn and fp improve in tfidfvectorizer vs countvectorizer.</p>
+
+								<h2>Conclusion</h2>
+								<p>We see better performance in tfidfvectorizer when measured on score, F1(0), F1(1), tn and fp.</p>
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<nav id="nav">
+							<ul class="links">
+								<li><a href="index.html">Portfolio Main Page</a></li>
+	
+							</ul>
+						</nav>
+
+						<section class="split contact">
+
+
+
+
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; fuhan</li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
